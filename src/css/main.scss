@@ -1,1 +1,598 @@
-/* Your SCSS here. */
+$content-width: 72rem;
+$tablet-breakpoint: 64rem;
+$mobile-breakpoint: 50rem;
+$columns-breakpoint: 40rem;
+
+$nav-link-min-height: 2.25rem;
+$nav-padding-large: 0.5625rem;
+$nav-padding-compact: 0.1875rem;
+$nav-font-size-large: 0.95rem;
+$nav-font-size-compact: 0.85rem;
+
+$nav-border-width: 1px;
+
+// Includes the bottom border, so sections land exactly below the navbar.
+@function nav-height($padding) {
+  @return calc(#{2 * $padding + $nav-link-min-height} + #{$nav-border-width});
+}
+
+// ::backdrop does not inherit from :root in every browser, so it gets the
+// tokens directly.
+:root,
+::backdrop {
+  // Light ground
+  --color-bg: #eef2f6;
+  --color-surface: #ffffff;
+  --color-surface-raised: #e3e9f0;
+  --color-text: #161a1d;
+  --color-text-soft: #373d44;
+  --color-text-dim: #4b525a;
+  --color-muted: #5d646c;
+  --color-accent: #855a0e;
+  --color-accent-border: #967435;
+  --color-line: #cfd7e1;
+
+  // Ink bands
+  --color-ink: #161a1d;
+  --color-on-ink: #f2efe8;
+  --color-on-ink-soft: #cdd3da;
+  --color-on-ink-muted: #9aa3ad;
+  --color-accent-on-ink: #d9a441;
+  --color-accent-border-on-ink: #8a6a2e;
+
+  // Translucent and overlay
+  --color-nav-bg: rgba(238, 242, 246, 0.92);
+  --color-backdrop: rgba(22, 26, 29, 0.6);
+  --color-scrim-top: rgba(22, 26, 29, 0.5);
+  --color-scrim-bottom: rgba(22, 26, 29, 0.7);
+  --color-scrim-text-shadow: rgba(22, 26, 29, 0.75);
+  --color-accent-tint: rgba(133, 90, 14, 0.08);
+
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-small: 4px;
+  --radius-large: 8px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --duration-press: 100ms;
+  --duration-hover: 180ms;
+  --duration-nav: 200ms;
+  --duration-slide: 260ms;
+
+  --nav-height-compact: #{nav-height($nav-padding-compact)};
+}
+
+@mixin section-shell($vertical-padding: 6rem) {
+  padding: $vertical-padding clamp(1rem, 5vw, 4rem);
+
+  > * {
+    width: 100%;
+    max-width: $content-width;
+    margin-inline: auto;
+  }
+}
+
+@mixin mono-label($font-size: 0.8rem, $letter-spacing: 0.12em) {
+  font-family: var(--font-mono);
+  font-size: $font-size;
+  font-weight: 500;
+  letter-spacing: $letter-spacing;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+@mixin focus-ring($color: var(--color-accent)) {
+  &:focus-visible {
+    outline: 2px solid $color;
+    outline-offset: 3px;
+  }
+}
+
+@mixin button-base {
+  @include mono-label(0.85rem, 0.08em);
+  @include focus-ring;
+
+  display: inline-flex;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-small);
+  background: transparent;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: background-color var(--duration-hover) var(--ease-out),
+    border-color var(--duration-hover) var(--ease-out),
+    transform var(--duration-press) var(--ease-out);
+
+  &:hover {
+    border-color: var(--color-accent);
+    background: var(--color-accent-tint);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 20rem;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text-soft);
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-weight: 500;
+}
+
+h2 {
+  margin: 0 0 2.5rem;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  text-align: center;
+}
+
+h3,
+h4 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  line-height: 1.15;
+}
+
+strong {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  @include button-base;
+}
+
+.eyebrow,
+.label {
+  @include mono-label;
+
+  margin: 0 0 1rem;
+  color: var(--color-muted);
+}
+
+body > header {
+  @include section-shell;
+
+  display: grid;
+  min-height: 34rem;
+  place-content: center;
+  background: linear-gradient(
+    180deg,
+    var(--color-bg),
+    var(--color-surface-raised)
+  );
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.9rem, 7.2vw, 5.4rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    animation: fade-up 600ms var(--ease-out) both;
+  }
+
+  p {
+    max-width: 70ch;
+    margin: 1rem auto 0;
+    color: var(--color-text-soft);
+  }
+
+  > nav {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: $nav-padding-large clamp(1rem, 4vw, 2.5rem);
+    border-bottom: $nav-border-width solid var(--color-line);
+    background: var(--color-nav-bg);
+    backdrop-filter: blur(0.75rem);
+    transition: padding var(--duration-nav) var(--ease-out);
+
+    ul {
+      display: flex;
+      max-width: $content-width;
+      margin: 0 auto;
+      padding: 0;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0 clamp(0.5rem, 2.5vw, 2.5rem);
+      list-style: none;
+    }
+
+    a {
+      @include mono-label($nav-font-size-large, 0.08em);
+      @include focus-ring;
+
+      display: flex;
+      min-height: $nav-link-min-height;
+      align-items: center;
+      color: var(--color-text-dim);
+      text-decoration-line: underline;
+      text-decoration-color: transparent;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.4rem;
+      transition: color var(--duration-hover) var(--ease-out),
+        text-decoration-color var(--duration-hover) var(--ease-out),
+        font-size var(--duration-nav) var(--ease-out);
+
+      &:hover {
+        color: var(--color-text);
+      }
+
+      &[aria-current="page"] {
+        color: var(--color-accent);
+        text-decoration-color: var(--color-accent);
+      }
+    }
+
+    &.is-scrolled {
+      padding-block: $nav-padding-compact;
+
+      a {
+        font-size: $nav-font-size-compact;
+      }
+    }
+  }
+}
+
+main > section,
+body > footer {
+  @include section-shell;
+
+  scroll-margin-top: var(--nav-height-compact);
+}
+
+main > section:nth-child(even) {
+  background: var(--color-surface-raised);
+}
+
+.carousel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  align-items: center;
+}
+
+// Every slide shares one grid cell, so the track is as tall as the tallest
+// slide and the height stays fixed while switching.
+.carousel-track {
+  display: grid;
+  min-width: 0;
+}
+
+.carousel-slide {
+  display: flex;
+  min-height: 21rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  flex-direction: column;
+  grid-area: 1 / 1;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  opacity: 0;
+  visibility: hidden;
+
+  // Only the incoming slide fades; the outgoing one hides immediately so the
+  // two never overlap.
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity var(--duration-slide) var(--ease-out);
+  }
+
+  p:not(.eyebrow) {
+    max-width: 70ch;
+    margin: 0 0 1.5rem;
+  }
+
+  > button {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+}
+
+.carousel-button {
+  width: 3rem;
+  height: 3rem;
+  min-height: 3rem;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--color-surface);
+  font-size: 1rem;
+
+  &:hover {
+    background: var(--color-surface-raised);
+  }
+}
+
+dialog {
+  width: 90vw;
+  max-width: 32rem;
+  padding: 2.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  color: var(--color-text-soft);
+
+  &[open] {
+    animation: fade-in var(--duration-slide) var(--ease-out);
+  }
+
+  &::backdrop {
+    background: var(--color-backdrop);
+    backdrop-filter: blur(0.25rem);
+  }
+
+  form {
+    margin-top: 1.5rem;
+    text-align: right;
+  }
+}
+
+.detail-list {
+  margin: 0;
+
+  div {
+    display: grid;
+    padding-block: 1rem;
+    gap: 0.5rem;
+    border-block: 1px solid var(--color-line);
+  }
+
+  dt {
+    @include mono-label;
+
+    color: var(--color-muted);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+#demo video {
+  display: block;
+  width: 100%;
+  max-width: 60rem;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-large);
+  background: var(--color-ink);
+  object-fit: contain;
+}
+
+.tech-stack-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.tech-stack-column {
+  display: grid;
+  min-height: 10rem;
+  padding: 1.5rem;
+  place-content: center;
+  place-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  text-align: center;
+
+  .label {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+#coursework {
+  min-height: 28rem;
+  background: linear-gradient(var(--color-scrim-top), var(--color-scrim-bottom)),
+    url("../assets/sunset.jpg") center / cover fixed;
+  color: var(--color-on-ink-soft);
+
+  // The scrim is light enough for the photo to show, so a soft shadow keeps
+  // the text readable over the brighter clouds.
+  h2,
+  p {
+    text-shadow: 0 1px 0.75rem var(--color-scrim-text-shadow);
+  }
+
+  h2 {
+    color: var(--color-on-ink);
+  }
+
+  p {
+    max-width: 52rem;
+    color: var(--color-on-ink);
+    text-align: center;
+  }
+}
+
+body > footer {
+  padding-block: 4rem;
+  background: var(--color-ink);
+  color: var(--color-on-ink-soft);
+  text-align: center;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: var(--color-on-ink);
+  }
+
+  address {
+    font-style: normal;
+
+    p {
+      margin: 0;
+    }
+
+    .label {
+      margin: 0 0.5rem 0 0;
+      color: var(--color-on-ink-muted);
+    }
+
+    a {
+      @include focus-ring(var(--color-accent-on-ink));
+
+      color: var(--color-on-ink);
+      text-decoration-color: var(--color-accent-on-ink);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.25rem;
+      transition: color var(--duration-hover) var(--ease-out);
+
+      &:hover {
+        color: var(--color-accent-on-ink);
+      }
+    }
+  }
+
+  nav ul {
+    display: flex;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    justify-content: center;
+    gap: 1rem;
+    list-style: none;
+  }
+
+  nav a {
+    @include focus-ring(var(--color-accent-on-ink));
+
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    place-items: center;
+    border: 1px solid var(--color-accent-border-on-ink);
+    border-radius: 50%;
+    color: var(--color-on-ink-muted);
+    font-size: 1.35rem;
+    text-decoration: none;
+    transition: color var(--duration-hover) var(--ease-out),
+      border-color var(--duration-hover) var(--ease-out),
+      transform var(--duration-press) var(--ease-out);
+
+    &:hover {
+      border-color: var(--color-accent-on-ink);
+      color: var(--color-accent-on-ink);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: $tablet-breakpoint) {
+  body > header {
+    min-height: 30rem;
+  }
+}
+
+@media (max-width: $mobile-breakpoint) {
+  body > header {
+    min-height: 28rem;
+  }
+
+  main > section {
+    padding-block: 4rem;
+  }
+
+  body > footer {
+    padding-block: 2.5rem;
+  }
+
+  .carousel {
+    grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+    gap: 0.5rem;
+  }
+
+  .carousel-button {
+    width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+@media (max-width: $columns-breakpoint) {
+  .tech-stack-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

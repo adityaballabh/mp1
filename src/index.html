@@ -2,12 +2,271 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Newsreader:wght@500&display=swap"
+        />
         <title>MP1</title>
     </head>
     <body>
-        <h1>Hello World! Welcome to MP1!</h1>
-        <img src="assets/image.jpg">
+        <header>
+            <nav aria-label="Primary navigation">
+                <ul>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#coursework">Coursework</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#tech-stack">Tech Stack</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+
+            <h1>Aditya Ballabh</h1>
+            <p>Champaign, IL</p>
+            <p>
+                CS grad student at UIUC. Previously a software engineer at Cisco
+                working on firewall management.
+            </p>
+        </header>
+
+        <main>
+            <section id="projects">
+                <h2>Projects</h2>
+
+                <div class="carousel">
+                    <button
+                        class="carousel-button carousel-button-previous"
+                        type="button"
+                        aria-label="Previous project"
+                        aria-controls="project-slides"
+                    >
+                        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+
+                    <div class="carousel-track" id="project-slides">
+                        <article class="carousel-slide is-active">
+                            <p class="eyebrow">01 / 03</p>
+                            <h3>BrowserVec</h3>
+                            <p>
+                                Text and image semantic search running entirely
+                                in-browser. Custom C++ nearest-neighbor engine
+                                (HNSW and product quantization) compiled to
+                                WebAssembly, with multi-threaded search.
+                                <strong>0.98 recall@10</strong> on 1M vectors,
+                                matching native hnswlib. Runs
+                                <strong>4–7× faster</strong> than hnswlib
+                                in-browser. Scales to over
+                                <strong>65k QPS</strong> on 10 threads.
+                            </p>
+                            <button
+                                type="button"
+                                aria-haspopup="dialog"
+                                aria-controls="browservec-details"
+                            >
+                                More details
+                            </button>
+
+                            <dialog
+                                id="browservec-details"
+                                aria-labelledby="browservec-details-title"
+                            >
+                                <h4 id="browservec-details-title">
+                                    BrowserVec Details
+                                </h4>
+                                <dl class="detail-list">
+                                    <div>
+                                        <dt>Tech stack</dt>
+                                        <dd>C++ · WebAssembly · TinyCLIP · MiniLM</dd>
+                                    </div>
+                                </dl>
+                                <form method="dialog">
+                                    <button type="submit">Close</button>
+                                </form>
+                            </dialog>
+                        </article>
+
+                        <article class="carousel-slide">
+                            <p class="eyebrow">02 / 03</p>
+                            <h3>ProofNet</h3>
+                            <p>
+                                Decentralized anonymous network enforcing
+                                bandwidth fairness while preserving privacy.
+                                Uses onion routing with signed forwarding
+                                receipts that are verified before sends are
+                                authorized. Dockerized adversarial harness
+                                inserts malicious nodes (forged signatures,
+                                forged receipts, replayed IDs) which the
+                                protocol detects and blocks.
+                            </p>
+                            <button
+                                type="button"
+                                aria-haspopup="dialog"
+                                aria-controls="proofnet-details"
+                            >
+                                More details
+                            </button>
+
+                            <dialog
+                                id="proofnet-details"
+                                aria-labelledby="proofnet-details-title"
+                            >
+                                <h4 id="proofnet-details-title">
+                                    ProofNet Details
+                                </h4>
+                                <dl class="detail-list">
+                                    <div>
+                                        <dt>Tech stack</dt>
+                                        <dd>Rust · Python</dd>
+                                    </div>
+                                </dl>
+                                <form method="dialog">
+                                    <button type="submit">Close</button>
+                                </form>
+                            </dialog>
+                        </article>
+
+                        <article class="carousel-slide">
+                            <p class="eyebrow">03 / 03</p>
+                            <h3>MergeReview</h3>
+                            <p>
+                                Research data-quality platform that flags
+                                potentially merged author profiles by comparing
+                                dataset records against OpenAlex, Semantic
+                                Scholar, and ORCID, with evidence, reviewer
+                                decisions, and history.
+                            </p>
+                            <button
+                                type="button"
+                                aria-haspopup="dialog"
+                                aria-controls="merge-review-details"
+                            >
+                                More details
+                            </button>
+
+                            <dialog
+                                id="merge-review-details"
+                                aria-labelledby="merge-review-details-title"
+                            >
+                                <h4 id="merge-review-details-title">
+                                    MergeReview Details
+                                </h4>
+                                <dl class="detail-list">
+                                    <div>
+                                        <dt>Tech stack</dt>
+                                        <dd>Python · PostgreSQL · Docker</dd>
+                                    </div>
+                                </dl>
+                                <form method="dialog">
+                                    <button type="submit">Close</button>
+                                </form>
+                            </dialog>
+                        </article>
+                    </div>
+
+                    <button
+                        class="carousel-button carousel-button-next"
+                        type="button"
+                        aria-label="Next project"
+                        aria-controls="project-slides"
+                    >
+                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </section>
+
+            <section id="coursework">
+                <h2>Coursework</h2>
+
+                <p>
+                    Networks · Compilers · Operating Systems · Machine Learning ·
+                    Cryptography + Blockchains · Parallel Programming · Advanced
+                    Algorithms
+                </p>
+            </section>
+
+            <section id="demo">
+                <h2>Demo</h2>
+
+                <video controls>
+                    <!-- webpackIgnore: true -->
+                    <source
+                        src="./assets/sample-vid.mp4"
+                        type="video/mp4"
+                    />
+                </video>
+            </section>
+
+            <section id="tech-stack">
+                <h2>Tech Stack</h2>
+
+                <div class="tech-stack-columns">
+                    <div class="tech-stack-column">
+                        <h3 class="label">Languages</h3>
+                        <p>C++ · Java · Python · Rust · Go</p>
+                    </div>
+
+                    <div class="tech-stack-column">
+                        <h3 class="label">Frameworks</h3>
+                        <p>Spring Boot · Flask · Django</p>
+                    </div>
+
+                    <div class="tech-stack-column">
+                        <h3 class="label">Infra</h3>
+                        <p>Docker · AWS · Kubernetes</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer id="contact">
+            <h2>Contact</h2>
+
+            <address>
+                <p>
+                    <span class="label">Email</span>
+                    <a href="mailto:ballabh2@illinois.edu"
+                        >ballabh2@illinois.edu</a
+                    >
+                </p>
+            </address>
+
+            <nav aria-label="Social media">
+                <ul>
+                    <li>
+                        <a
+                            href="https://github.com/adityaballabh"
+                            aria-label="GitHub"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <i
+                                class="fa-brands fa-github"
+                                aria-hidden="true"
+                            ></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="https://www.linkedin.com/in/aditya-ballabh"
+                            aria-label="LinkedIn"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <i
+                                class="fa-brands fa-linkedin"
+                                aria-hidden="true"
+                            ></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
     </body>
 </html>
