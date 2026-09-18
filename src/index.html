@@ -17,13 +17,14 @@
         <title>MP1</title>
     </head>
     <body>
-        <header>
+        <header id="about">
             <nav aria-label="Primary navigation">
                 <ul>
+                    <li><a href="#about">About</a></li>
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#coursework">Coursework</a></li>
-                    <li><a href="#demo">Demo</a></li>
                     <li><a href="#tech-stack">Tech Stack</a></li>
+                    <li><a href="#demo">Demo</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
@@ -47,7 +48,10 @@
                         aria-label="Previous project"
                         aria-controls="project-slides"
                     >
-                        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                        <i
+                            class="fa-solid fa-chevron-left"
+                            aria-hidden="true"
+                        ></i>
                     </button>
 
                     <div class="carousel-track" id="project-slides">
@@ -82,8 +86,11 @@
                                 </h4>
                                 <dl class="detail-list">
                                     <div>
-                                        <dt>Tech stack</dt>
-                                        <dd>C++ · WebAssembly · TinyCLIP · MiniLM</dd>
+                                        <dt>Tech Stack</dt>
+                                        <dd>
+                                            C++ · WebAssembly · TinyCLIP ·
+                                            MiniLM
+                                        </dd>
                                     </div>
                                 </dl>
                                 <form method="dialog">
@@ -122,7 +129,7 @@
                                 </h4>
                                 <dl class="detail-list">
                                     <div>
-                                        <dt>Tech stack</dt>
+                                        <dt>Tech Stack</dt>
                                         <dd>Rust · Python</dd>
                                     </div>
                                 </dl>
@@ -159,7 +166,7 @@
                                 </h4>
                                 <dl class="detail-list">
                                     <div>
-                                        <dt>Tech stack</dt>
+                                        <dt>Tech Stack</dt>
                                         <dd>Python · PostgreSQL · Docker</dd>
                                     </div>
                                 </dl>
@@ -176,7 +183,10 @@
                         aria-label="Next project"
                         aria-controls="project-slides"
                     >
-                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                        <i
+                            class="fa-solid fa-chevron-right"
+                            aria-hidden="true"
+                        ></i>
                     </button>
                 </div>
             </section>
@@ -185,22 +195,10 @@
                 <h2>Coursework</h2>
 
                 <p>
-                    Networks · Compilers · Operating Systems · Machine Learning ·
-                    Cryptography + Blockchains · Parallel Programming · Advanced
-                    Algorithms
+                    Networks · Compilers · Operating Systems · Machine Learning
+                    · Cryptography + Blockchains · Parallel Programming ·
+                    Advanced Algorithms
                 </p>
-            </section>
-
-            <section id="demo">
-                <h2>Demo</h2>
-
-                <video controls>
-                    <!-- webpackIgnore: true -->
-                    <source
-                        src="./assets/sample-vid.mp4"
-                        type="video/mp4"
-                    />
-                </video>
             </section>
 
             <section id="tech-stack">
@@ -223,6 +221,15 @@
                     </div>
                 </div>
             </section>
+
+            <section id="demo">
+                <h2>Demo</h2>
+
+                <video controls>
+                    <!-- webpackIgnore: true -->
+                    <source src="./assets/demo.mp4" type="video/mp4" />
+                </video>
+            </section>
         </main>
 
         <footer id="contact">
@@ -230,7 +237,6 @@
 
             <address>
                 <p>
-                    <span class="label">Email</span>
                     <a href="mailto:ballabh2@illinois.edu"
                         >ballabh2@illinois.edu</a
                     >

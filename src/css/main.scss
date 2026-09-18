@@ -75,13 +75,12 @@ $nav-border-width: 1px;
   }
 }
 
-@mixin mono-label($font-size: 0.8rem, $letter-spacing: 0.12em) {
+@mixin mono-label($font-size: 0.8rem, $letter-spacing: 0.02em) {
   font-family: var(--font-mono);
   font-size: $font-size;
   font-weight: 500;
   letter-spacing: $letter-spacing;
   line-height: 1.5;
-  text-transform: uppercase;
 }
 
 @mixin focus-ring($color: var(--color-accent)) {
@@ -92,7 +91,7 @@ $nav-border-width: 1px;
 }
 
 @mixin button-base {
-  @include mono-label(0.85rem, 0.08em);
+  @include mono-label(0.85rem);
   @include focus-ring;
 
   display: inline-flex;
@@ -127,6 +126,7 @@ $nav-border-width: 1px;
 
 html {
   scroll-behavior: smooth;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -238,7 +238,7 @@ body > header {
     }
 
     a {
-      @include mono-label($nav-font-size-large, 0.08em);
+      @include mono-label($nav-font-size-large);
       @include focus-ring;
 
       display: flex;
@@ -374,7 +374,6 @@ dialog {
     display: grid;
     padding-block: 1rem;
     gap: 0.5rem;
-    border-block: 1px solid var(--color-line);
   }
 
   dt {
@@ -395,8 +394,13 @@ dialog {
   aspect-ratio: 16 / 9;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-large);
-  background: var(--color-ink);
+  background: transparent;
   object-fit: contain;
+
+  &:fullscreen {
+    border: 0;
+    border-radius: 0;
+  }
 }
 
 .tech-stack-columns {
@@ -467,22 +471,20 @@ body > footer {
       margin: 0;
     }
 
-    .label {
-      margin: 0 0.5rem 0 0;
-      color: var(--color-on-ink-muted);
-    }
-
     a {
       @include focus-ring(var(--color-accent-on-ink));
 
       color: var(--color-on-ink);
-      text-decoration-color: var(--color-accent-on-ink);
+      text-decoration-color: var(--color-accent-border-on-ink);
       text-decoration-thickness: 2px;
-      text-underline-offset: 0.25rem;
-      transition: color var(--duration-hover) var(--ease-out);
+      text-underline-offset: 0.3rem;
+      transition:
+        color var(--duration-hover) var(--ease-out),
+        text-decoration-color var(--duration-hover) var(--ease-out);
 
       &:hover {
         color: var(--color-accent-on-ink);
+        text-decoration-color: var(--color-accent-on-ink);
       }
     }
   }

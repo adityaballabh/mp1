@@ -11,6 +11,23 @@ if (primaryNav) {
   if (navItems.length > 0) {
     let updatePending = false;
 
+    // A nav click keeps its link highlighted until the user scrolls on their
+    // own. Otherwise a section too close to the end of the page to reach the
+    // navbar (Tech Stack on tall screens) lands at the page bottom, where the
+    // last link wins, and the wrong item lights up.
+    let clickedNav = null;
+
+    const getLandingScrollY = (target) => {
+      const scrollMarginTop =
+        parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+      const maxScrollY =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const targetScrollY =
+        target.getBoundingClientRect().top + window.scrollY - scrollMarginTop;
+
+      return Math.min(Math.max(targetScrollY, 0), maxScrollY);
+    };
+
     const updateNavbar = () => {
       primaryNav.classList.toggle("is-scrolled", window.scrollY > 0);
 
@@ -20,7 +37,20 @@ if (primaryNav) {
         document.documentElement.scrollHeight - 1;
       let currentItem = navItems[0];
 
-      if (atPageBottom) {
+      if (clickedNav) {
+        const atLanding =
+          Math.abs(window.scrollY - clickedNav.landingScrollY) <= 1;
+
+        if (atLanding) {
+          clickedNav.arrived = true;
+        } else if (clickedNav.arrived) {
+          clickedNav = null;
+        }
+      }
+
+      if (clickedNav) {
+        currentItem = clickedNav.item;
+      } else if (atPageBottom) {
         currentItem = navItems[navItems.length - 1];
       } else {
         navItems.forEach((item) => {
@@ -57,19 +87,55 @@ if (primaryNav) {
 
     // scrollIntoView honors each section's scroll-margin-top, which matches
     // the compact navbar height, so sections land just below the navbar.
-    navItems.forEach(({ link, target }) => {
+    navItems.forEach((item) => {
+      const { link, target } = item;
+
       link.addEventListener("click", (event) => {
         event.preventDefault();
+        clickedNav = {
+          item,
+          landingScrollY: getLandingScrollY(target),
+          arrived: false,
+        };
         target.scrollIntoView({
           behavior: reducedMotionQuery.matches ? "auto" : "smooth",
           block: "start",
         });
         window.history.pushState(null, "", link.hash);
+        updateNavbar();
       });
     });
 
+    const releaseClickedNav = () => {
+      if (clickedNav) {
+        clickedNav = null;
+        scheduleNavbarUpdate();
+      }
+    };
+
+    const scrollKeys = new Set([
+      "ArrowUp",
+      "ArrowDown",
+      "PageUp",
+      "PageDown",
+      "Home",
+      "End",
+      " ",
+    ]);
+
+    window.addEventListener("wheel", releaseClickedNav, { passive: true });
+    window.addEventListener("touchstart", releaseClickedNav, { passive: true });
+    window.addEventListener("keydown", (event) => {
+      if (scrollKeys.has(event.key)) {
+        releaseClickedNav();
+      }
+    });
+
     window.addEventListener("scroll", scheduleNavbarUpdate, { passive: true });
-    window.addEventListener("resize", scheduleNavbarUpdate);
+    window.addEventListener("resize", () => {
+      releaseClickedNav();
+      scheduleNavbarUpdate();
+    });
     updateNavbar();
   }
 }
