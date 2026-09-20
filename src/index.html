@@ -4,6 +4,28 @@
         <meta charset="utf-8" />
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- webpackIgnore: true -->
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="./assets/favicon-32.png"
+        />
+        <!-- webpackIgnore: true -->
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="192x192"
+            href="./assets/favicon-192.png"
+        />
+        <!-- webpackIgnore: true -->
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="./assets/apple-touch-icon.png"
+        />
+
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -14,21 +36,23 @@
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Newsreader:wght@500&display=swap"
         />
-        <title>MP1</title>
+        <title>Aditya Ballabh</title>
     </head>
     <body>
-        <header id="about">
-            <nav aria-label="Primary navigation">
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#coursework">Coursework</a></li>
-                    <li><a href="#tech-stack">Tech Stack</a></li>
-                    <li><a href="#demo">Demo</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+        <a class="skip-link" href="#about">Skip to content</a>
 
+        <nav aria-label="Primary">
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#coursework">Coursework</a></li>
+                <li><a href="#tech-stack">Tech Stack</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <header id="about" tabindex="-1">
             <h1>Aditya Ballabh</h1>
             <p>Champaign, IL</p>
             <p>
@@ -54,7 +78,11 @@
                         ></i>
                     </button>
 
-                    <div class="carousel-track" id="project-slides">
+                    <div
+                        class="carousel-track"
+                        id="project-slides"
+                        aria-live="polite"
+                    >
                         <article class="carousel-slide is-active">
                             <p class="eyebrow">01 / 03</p>
                             <h3>BrowserVec</h3>
@@ -63,16 +91,12 @@
                                 in-browser. Custom C++ nearest-neighbor engine
                                 (HNSW and product quantization) compiled to
                                 WebAssembly, with multi-threaded search.
-                                <strong>0.98 recall@10</strong> on 1M vectors,
-                                matching native hnswlib. Runs
-                                <strong>4–7× faster</strong> than hnswlib
-                                in-browser. Scales to over
-                                <strong>65k QPS</strong> on 10 threads.
                             </p>
                             <button
                                 type="button"
                                 aria-haspopup="dialog"
                                 aria-controls="browservec-details"
+                                aria-label="More details about BrowserVec"
                             >
                                 More details
                             </button>
@@ -85,13 +109,18 @@
                                     BrowserVec Details
                                 </h4>
                                 <dl class="detail-list">
-                                    <div>
-                                        <dt>Tech Stack</dt>
-                                        <dd>
-                                            C++ · WebAssembly · TinyCLIP ·
-                                            MiniLM
-                                        </dd>
-                                    </div>
+                                    <dt>Tech Stack</dt>
+                                    <dd>
+                                        C++ · WebAssembly · TinyCLIP ·
+                                        MiniLM
+                                    </dd>
+                                    <dt>Timeline</dt>
+                                    <dd>Summer 2026, 6 weeks</dd>
+                                    <dt>Highlight</dt>
+                                    <dd>
+                                        4–7× faster than hnswlib in-browser
+                                        at 0.98 recall@10 on 1M vectors
+                                    </dd>
                                 </dl>
                                 <form method="dialog">
                                     <button type="submit">Close</button>
@@ -107,15 +136,13 @@
                                 bandwidth fairness while preserving privacy.
                                 Uses onion routing with signed forwarding
                                 receipts that are verified before sends are
-                                authorized. Dockerized adversarial harness
-                                inserts malicious nodes (forged signatures,
-                                forged receipts, replayed IDs) which the
-                                protocol detects and blocks.
+                                authorized.
                             </p>
                             <button
                                 type="button"
                                 aria-haspopup="dialog"
                                 aria-controls="proofnet-details"
+                                aria-label="More details about ProofNet"
                             >
                                 More details
                             </button>
@@ -128,10 +155,15 @@
                                     ProofNet Details
                                 </h4>
                                 <dl class="detail-list">
-                                    <div>
-                                        <dt>Tech Stack</dt>
-                                        <dd>Rust · Python</dd>
-                                    </div>
+                                    <dt>Tech Stack</dt>
+                                    <dd>Rust · Python</dd>
+                                    <dt>Timeline</dt>
+                                    <dd>Spring 2026, 8 weeks</dd>
+                                    <dt>Highlight</dt>
+                                    <dd>
+                                        Dockerized adversarial harness sets up
+                                        a network of 20 nodes
+                                    </dd>
                                 </dl>
                                 <form method="dialog">
                                     <button type="submit">Close</button>
@@ -153,6 +185,7 @@
                                 type="button"
                                 aria-haspopup="dialog"
                                 aria-controls="merge-review-details"
+                                aria-label="More details about MergeReview"
                             >
                                 More details
                             </button>
@@ -165,10 +198,15 @@
                                     MergeReview Details
                                 </h4>
                                 <dl class="detail-list">
-                                    <div>
-                                        <dt>Tech Stack</dt>
-                                        <dd>Python · PostgreSQL · Docker</dd>
-                                    </div>
+                                    <dt>Tech Stack</dt>
+                                    <dd>Python · PostgreSQL · Docker</dd>
+                                    <dt>Timeline</dt>
+                                    <dd>Fall 2026, 2 weeks</dd>
+                                    <dt>Highlight</dt>
+                                    <dd>
+                                        Reviews over 4600 publications across 50
+                                        author profiles, flagging 9 merged candidates
+                                    </dd>
                                 </dl>
                                 <form method="dialog">
                                     <button type="submit">Close</button>
@@ -225,9 +263,27 @@
             <section id="demo">
                 <h2>Demo</h2>
 
-                <video controls>
+                <video
+                    controls
+                    playsinline
+                    preload="metadata"
+                    poster="./assets/demo-poster.jpg"
+                    aria-label="Screen recording of the BrowserVec demo"
+                >
                     <!-- webpackIgnore: true -->
                     <source src="./assets/demo.mp4" type="video/mp4" />
+                    <!-- webpackIgnore: true -->
+                    <track
+                        kind="captions"
+                        src="./assets/demo.vtt"
+                        srclang="en"
+                        label="English"
+                        default
+                    />
+                    <p>
+                        Your browser does not support the HTML5 video element.
+                        <a href="./assets/demo.mp4">Download the demo video</a>.
+                    </p>
                 </video>
             </section>
         </main>
@@ -248,7 +304,7 @@
                     <li>
                         <a
                             href="https://github.com/adityaballabh"
-                            aria-label="GitHub"
+                            aria-label="GitHub (opens in a new tab)"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -261,7 +317,7 @@
                     <li>
                         <a
                             href="https://www.linkedin.com/in/aditya-ballabh"
-                            aria-label="LinkedIn"
+                            aria-label="LinkedIn (opens in a new tab)"
                             target="_blank"
                             rel="noopener noreferrer"
                         >

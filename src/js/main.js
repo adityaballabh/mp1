@@ -1,4 +1,4 @@
-const primaryNav = document.querySelector("header > nav");
+const primaryNav = document.querySelector("body > nav");
 
 if (primaryNav) {
   const navItems = Array.from(primaryNav.querySelectorAll('a[href^="#"]'))
@@ -17,13 +17,44 @@ if (primaryNav) {
     // last link wins, and the wrong item lights up.
     let clickedNav = null;
 
+    // The address bar only starts following sections once the reader scrolls,
+    // so a freshly loaded page keeps whatever URL they arrived on.
+    let trackingHash = false;
+
+    // The navbar sits in the flow, so compacting it shortens the document and
+    // pulls every section up with it. A click that starts at the very top is
+    // therefore measured against the expanded navbar but lands against the
+    // compact one, overshooting by the difference. scroll-margin-top is set to
+    // the compact navbar height, so it doubles as that measurement.
+    const getNavShrink = (scrollMarginTop) => {
+      if (window.scrollY > 0) {
+        return 0;
+      }
+
+      const navHeight = primaryNav.getBoundingClientRect().height;
+
+      return Math.max(navHeight - scrollMarginTop, 0);
+    };
+
     const getLandingScrollY = (target) => {
       const scrollMarginTop =
         parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
+      const navShrink = scrollMarginTop ? getNavShrink(scrollMarginTop) : 0;
       const maxScrollY =
-        document.documentElement.scrollHeight - window.innerHeight;
+        document.documentElement.scrollHeight - window.innerHeight - navShrink;
       const targetScrollY =
-        target.getBoundingClientRect().top + window.scrollY - scrollMarginTop;
+        target.getBoundingClientRect().top +
+        window.scrollY -
+        scrollMarginTop -
+        navShrink;
+
+      // Only the navbar sits above the header, and it is sticky, so a landing
+      // that close to the start of the document is the top of the page. Going
+      // there rather than to the header's own offset lets the navbar expand
+      // back to its full size.
+      if (targetScrollY <= primaryNav.getBoundingClientRect().height) {
+        return 0;
+      }
 
       return Math.min(Math.max(targetScrollY, 0), maxScrollY);
     };
@@ -62,11 +93,20 @@ if (primaryNav) {
 
       navItems.forEach((item) => {
         if (item === currentItem) {
-          item.link.setAttribute("aria-current", "page");
+          item.link.setAttribute("aria-current", "location");
         } else {
           item.link.removeAttribute("aria-current");
         }
       });
+
+      // Keep the address bar on the section being read, so a copied link
+      // lands where the reader is. replaceState rather than pushState: one
+      // history entry per section would turn the back button into a scroll
+      // log. It also leaves the scroll position alone, which assigning to
+      // location.hash would not.
+      if (trackingHash && window.location.hash !== currentItem.link.hash) {
+        window.history.replaceState(null, "", currentItem.link.hash);
+      }
     };
 
     const scheduleNavbarUpdate = () => {
@@ -85,21 +125,21 @@ if (primaryNav) {
       "(prefers-reduced-motion: reduce)"
     );
 
-    // scrollIntoView honors each section's scroll-margin-top, which matches
-    // the compact navbar height, so sections land just below the navbar.
+    // Scrolling to an explicit position rather than with scrollIntoView, so
+    // the landing accounts for the navbar compacting mid-scroll and the
+    // arrival check below compares against the same number.
     navItems.forEach((item) => {
       const { link, target } = item;
 
       link.addEventListener("click", (event) => {
         event.preventDefault();
-        clickedNav = {
-          item,
-          landingScrollY: getLandingScrollY(target),
-          arrived: false,
-        };
-        target.scrollIntoView({
+
+        const landingScrollY = getLandingScrollY(target);
+
+        clickedNav = { item, landingScrollY, arrived: false };
+        window.scrollTo({
+          top: landingScrollY,
           behavior: reducedMotionQuery.matches ? "auto" : "smooth",
-          block: "start",
         });
         window.history.pushState(null, "", link.hash);
         updateNavbar();
@@ -131,7 +171,14 @@ if (primaryNav) {
       }
     });
 
-    window.addEventListener("scroll", scheduleNavbarUpdate, { passive: true });
+    window.addEventListener(
+      "scroll",
+      () => {
+        trackingHash = true;
+        scheduleNavbarUpdate();
+      },
+      { passive: true }
+    );
     window.addEventListener("resize", () => {
       releaseClickedNav();
       scheduleNavbarUpdate();
@@ -175,6 +222,17 @@ carousels.forEach((carousel) => {
 
   nextButton.addEventListener("click", () => {
     showSlide(currentSlide + 1);
+  });
+
+  // Scoped to the carousel, so the arrow keys only move slides while focus is
+  // already inside it. Up and down stay untouched: they scroll the page.
+  carousel.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+      return;
+    }
+
+    event.preventDefault();
+    showSlide(currentSlide + (event.key === "ArrowLeft" ? -1 : 1));
   });
 
   showSlide(currentSlide);
