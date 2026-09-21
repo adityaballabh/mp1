@@ -62,8 +62,8 @@
         </header>
 
         <main>
-            <section id="projects">
-                <h2>Projects</h2>
+            <section id="projects" aria-labelledby="projects-title">
+                <h2 id="projects-title">Projects</h2>
 
                 <div class="carousel">
                     <button
@@ -84,7 +84,7 @@
                         aria-live="polite"
                     >
                         <article class="carousel-slide is-active">
-                            <p class="eyebrow">01 / 03</p>
+                            <p class="eyebrow"></p>
                             <h3>BrowserVec</h3>
                             <p>
                                 Text and image semantic search running entirely
@@ -110,10 +110,7 @@
                                 </h4>
                                 <dl class="detail-list">
                                     <dt>Tech Stack</dt>
-                                    <dd>
-                                        C++ · WebAssembly · TinyCLIP ·
-                                        MiniLM
-                                    </dd>
+                                    <dd>C++, WebAssembly, TinyCLIP, MiniLM</dd>
                                     <dt>Timeline</dt>
                                     <dd>Summer 2026, 6 weeks</dd>
                                     <dt>Highlight</dt>
@@ -129,7 +126,7 @@
                         </article>
 
                         <article class="carousel-slide">
-                            <p class="eyebrow">02 / 03</p>
+                            <p class="eyebrow"></p>
                             <h3>ProofNet</h3>
                             <p>
                                 Decentralized anonymous network enforcing
@@ -156,7 +153,7 @@
                                 </h4>
                                 <dl class="detail-list">
                                     <dt>Tech Stack</dt>
-                                    <dd>Rust · Python</dd>
+                                    <dd>Rust, Python</dd>
                                     <dt>Timeline</dt>
                                     <dd>Spring 2026, 8 weeks</dd>
                                     <dt>Highlight</dt>
@@ -172,7 +169,7 @@
                         </article>
 
                         <article class="carousel-slide">
-                            <p class="eyebrow">03 / 03</p>
+                            <p class="eyebrow"></p>
                             <h3>MergeReview</h3>
                             <p>
                                 Research data-quality platform that flags
@@ -199,7 +196,7 @@
                                 </h4>
                                 <dl class="detail-list">
                                     <dt>Tech Stack</dt>
-                                    <dd>Python · PostgreSQL · Docker</dd>
+                                    <dd>Python, PostgreSQL, Docker</dd>
                                     <dt>Timeline</dt>
                                     <dd>Fall 2026, 2 weeks</dd>
                                     <dt>Highlight</dt>
@@ -229,39 +226,58 @@
                 </div>
             </section>
 
-            <section id="coursework">
-                <h2>Coursework</h2>
+            <section id="coursework" aria-labelledby="coursework-title">
+                <h2 id="coursework-title">Coursework</h2>
 
-                <p>
-                    Networks · Compilers · Operating Systems · Machine Learning
-                    · Cryptography + Blockchains · Parallel Programming ·
-                    Advanced Algorithms
-                </p>
+                <ul>
+                    <li>Networks</li>
+                    <li>Compilers</li>
+                    <li>Operating Systems</li>
+                    <li>Machine Learning</li>
+                    <li>Cryptography</li>
+                    <li>Parallel Programming</li>
+                    <li>Advanced Algorithms</li>
+                </ul>
             </section>
 
-            <section id="tech-stack">
-                <h2>Tech Stack</h2>
+            <section id="tech-stack" aria-labelledby="tech-stack-title">
+                <h2 id="tech-stack-title">Tech Stack</h2>
 
                 <div class="tech-stack-columns">
                     <div class="tech-stack-column">
                         <h3 class="label">Languages</h3>
-                        <p>C++ · Java · Python · Rust · Go</p>
+                        <ul>
+                            <li>C++</li>
+                            <li>Java</li>
+                            <li>Python</li>
+                            <li>Go</li>
+                        </ul>
                     </div>
 
                     <div class="tech-stack-column">
                         <h3 class="label">Frameworks</h3>
-                        <p>Spring Boot · Flask · Django</p>
+                        <ul>
+                            <li>Spring</li>
+                            <li>Flask</li>
+                            <li>Django</li>
+                            <li>Gin</li>
+                        </ul>
                     </div>
 
                     <div class="tech-stack-column">
                         <h3 class="label">Infra</h3>
-                        <p>Docker · AWS · Kubernetes</p>
+                        <ul>
+                            <li>Docker</li>
+                            <li>AWS</li>
+                            <li>EKS</li>
+                            <li>Redis</li>
+                        </ul>
                     </div>
                 </div>
             </section>
 
-            <section id="demo">
-                <h2>Demo</h2>
+            <section id="demo" aria-labelledby="demo-title">
+                <h2 id="demo-title">Demo</h2>
 
                 <video
                     controls

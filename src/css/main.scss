@@ -1,6 +1,6 @@
 $content-width: 72rem;
 $mobile-breakpoint: 50rem;
-$columns-breakpoint: 40rem;
+$wide-breakpoint: 72.5rem;
 
 $nav-link-min-height: 2.25rem;
 $nav-padding-large: 0.875rem;
@@ -10,19 +10,24 @@ $nav-font-size-compact: 0.85rem;
 
 $nav-border-width: 1px;
 
+$tap-target: 2.75rem;
+$icon-button-size: 3rem;
+
 // Includes the bottom border, so sections land exactly below the navbar.
 @function nav-height($padding) {
   @return calc(#{2 * $padding + $nav-link-min-height} + #{$nav-border-width});
 }
 
-// ::backdrop does not inherit from :root in every browser, so it gets the
-// tokens directly.
+// ::backdrop doesn't always inherit from :root, so it gets the tokens too.
 :root,
 ::backdrop {
   // Light ground
   --color-bg: #eef2f6;
   --color-surface: #ffffff;
-  --color-surface-raised: #e3e9f0;
+  --color-surface-raised: #e1e8f1;
+  --color-surface-subtle: #f7f9fb;
+  --color-chip-on-ink: rgba(22, 26, 29, 0.45);
+  --color-chip-border-on-ink: rgba(242, 239, 232, 0.28);
   --color-text: #161a1d;
   --color-text-soft: #373d44;
   --color-text-dim: #4b525a;
@@ -64,8 +69,8 @@ $nav-border-width: 1px;
   --nav-height-compact: #{nav-height($nav-padding-compact)};
 }
 
-@mixin section-shell($vertical-padding: 6rem) {
-  padding: $vertical-padding clamp(1rem, 5vw, 4rem);
+@mixin section-shell {
+  padding: 6rem clamp(1rem, 5vw, 4rem);
 
   > * {
     width: 100%;
@@ -82,6 +87,33 @@ $nav-border-width: 1px;
   line-height: 1.5;
 }
 
+@mixin chip-list {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+
+  li {
+    display: grid;
+    padding: 0.35rem 0.75rem;
+    place-items: center;
+    border: 1px solid;
+    border-radius: var(--radius-small);
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+  }
+}
+
+@mixin card-surface {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+}
+
 @mixin focus-ring($color: var(--color-accent)) {
   &:focus-visible {
     outline: 2px solid $color;
@@ -94,7 +126,7 @@ $nav-border-width: 1px;
   @include focus-ring;
 
   display: inline-flex;
-  min-height: 2.75rem;
+  min-height: $tap-target;
   padding: 0.5rem 1rem;
   align-items: center;
   justify-content: center;
@@ -123,12 +155,12 @@ $nav-border-width: 1px;
   box-sizing: border-box;
 }
 
-// No scroll-behavior here on purpose. It would also animate the browser's
-// jump to a fragment on load, so opening /#demo would start at the top and
-// scroll the whole page. Nav clicks ask for smooth scrolling explicitly in
-// main.js instead, which leaves deep links landing instantly.
+// No scroll-behavior here: it would animate the jump to a #link on page load.
 html {
   overscroll-behavior-y: none;
+
+  // Anchoring would undo the nav-shrink correction main.js applies to landings.
+  overflow-anchor: none;
 }
 
 body {
@@ -165,11 +197,6 @@ h4 {
   line-height: 1.15;
 }
 
-strong {
-  color: var(--color-text);
-  font-weight: 500;
-}
-
 a {
   color: inherit;
 }
@@ -198,8 +225,7 @@ body > header {
   );
   text-align: center;
 
-  // The skip link focuses this element programmatically. It is a container,
-  // not a control, so a ring around the whole hero would only be noise.
+  // The skip link focuses the header, but a ring around it would be noise.
   &:focus {
     outline: none;
   }
@@ -219,7 +245,7 @@ body > header {
   }
 }
 
-// Sits above the navbar's z-index so it clears the sticky bar when revealed.
+// Above the navbar's z-index, so it isn't hidden behind the sticky bar.
 .skip-link {
   @include mono-label(0.85rem);
 
@@ -228,7 +254,7 @@ body > header {
   top: 0;
   left: 50%;
   display: inline-flex;
-  min-height: 2.75rem;
+  min-height: $tap-target;
   padding: 0.5rem 1rem;
   align-items: center;
   border: 1px solid var(--color-accent-border);
@@ -276,6 +302,8 @@ body > nav {
     min-height: $nav-link-min-height;
     align-items: center;
     color: var(--color-text-dim);
+
+    // The underline is always there, just transparent, so it can fade in.
     text-decoration-line: underline;
     text-decoration-color: transparent;
     text-decoration-thickness: 2px;
@@ -307,10 +335,11 @@ main > section,
 body > footer {
   @include section-shell;
 
+  // Always the compact height; main.js reads it back to correct for the shrink.
   scroll-margin-top: var(--nav-height-compact);
 }
 
-main > section:nth-child(even) {
+#tech-stack {
   background: var(--color-surface-raised);
 }
 
@@ -321,27 +350,23 @@ main > section:nth-child(even) {
   align-items: center;
 }
 
-// Every slide shares one grid cell, so the track is as tall as the tallest
-// slide and the height stays fixed while switching.
+// All slides stack in one grid cell, so the height doesn't jump on a switch.
 .carousel-track {
   display: grid;
-  min-width: 0;
 }
 
 .carousel-slide {
+  @include card-surface;
+
   display: flex;
   min-height: 21rem;
   padding: clamp(1.5rem, 4vw, 2.5rem);
   flex-direction: column;
   grid-area: 1 / 1;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-large);
-  background: var(--color-surface);
   opacity: 0;
   visibility: hidden;
 
-  // Only the incoming slide fades; the outgoing one hides immediately so the
-  // two never overlap.
+  // Only the incoming slide fades, so the two never overlap.
   &.is-active {
     opacity: 1;
     visibility: visible;
@@ -349,7 +374,7 @@ main > section:nth-child(even) {
   }
 
   p:not(.eyebrow) {
-    max-width: 45rem;
+    max-width: 54rem;
     margin: 0 0 1.5rem;
   }
 
@@ -360,13 +385,13 @@ main > section:nth-child(even) {
 }
 
 .carousel-button {
-  width: 3rem;
-  height: 3rem;
-  min-height: 3rem;
+  width: $icon-button-size;
+  height: $icon-button-size;
+  min-height: $icon-button-size;
   padding: 0;
   border-radius: 50%;
   background: var(--color-surface);
-  font-size: 1rem;
+  font-size: 1.25rem;
 
   &:hover {
     background: var(--color-surface-raised);
@@ -374,12 +399,11 @@ main > section:nth-child(even) {
 }
 
 dialog {
+  @include card-surface;
+
   width: 90vw;
   max-width: 32rem;
   padding: 2.5rem;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-large);
-  background: var(--color-surface);
   color: var(--color-text-soft);
 
   &[open] {
@@ -413,8 +437,7 @@ dialog {
     margin: 0;
   }
 
-  // Each key starts a new pair, so it needs more room above it than the
-  // 0.5rem that separates a key from its own value.
+  // More space between pairs than between a key and its own value.
   dd + dt {
     margin-top: 1.5rem;
   }
@@ -438,28 +461,37 @@ dialog {
 
 .tech-stack-columns {
   display: grid;
+  max-width: 46rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 2.5rem;
 }
 
 .tech-stack-column {
+  @include card-surface;
+
   display: grid;
   min-height: 8rem;
-  padding: 2.25rem 1.5rem 1.5rem;
+  padding: 1.5rem;
   grid-template-rows: auto 1fr;
   justify-items: center;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-large);
-  background: var(--color-surface);
   text-align: center;
 
   .label {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
   }
 
-  p {
-    margin: 0;
+  ul {
+    @include chip-list;
+
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: center;
     align-self: center;
+
+    li {
+      border-color: var(--color-line);
+      background: var(--color-surface-subtle);
+    }
   }
 }
 
@@ -471,21 +503,24 @@ dialog {
     url("../assets/sunset.jpg") center / cover fixed;
   color: var(--color-on-ink-soft);
 
-  // The scrim is light enough for the photo to show, so a soft shadow keeps
-  // the text readable over the brighter clouds.
-  h2,
-  p {
+  // A shadow keeps the text readable over the photo's brightest clouds.
+  h2 {
+    color: var(--color-on-ink);
     text-shadow: 0 1px 0.75rem var(--color-scrim-text-shadow);
   }
 
-  h2 {
-    color: var(--color-on-ink);
-  }
+  ul {
+    @include chip-list;
 
-  p {
-    max-width: 52rem;
-    color: var(--color-on-ink);
-    text-align: center;
+    max-width: 36rem;
+    margin-inline: auto;
+    justify-content: center;
+
+    li {
+      border-color: var(--color-chip-border-on-ink);
+      background: var(--color-chip-on-ink);
+      color: var(--color-on-ink);
+    }
   }
 }
 
@@ -514,8 +549,7 @@ body > footer {
       text-decoration-color: var(--color-accent-border-on-ink);
       text-decoration-thickness: 2px;
       text-underline-offset: 0.3rem;
-      transition:
-        color var(--duration-hover) var(--ease-out),
+      transition: color var(--duration-hover) var(--ease-out),
         text-decoration-color var(--duration-hover) var(--ease-out);
 
       &:hover {
@@ -538,8 +572,8 @@ body > footer {
     @include focus-ring(var(--color-accent-on-ink));
 
     display: grid;
-    width: 3rem;
-    height: 3rem;
+    width: $icon-button-size;
+    height: $icon-button-size;
     place-items: center;
     border: 1px solid var(--color-accent-border-on-ink);
     border-radius: 50%;
@@ -583,18 +617,22 @@ body > footer {
   }
 }
 
+@media (min-width: $wide-breakpoint) {
+  .tech-stack-columns {
+    max-width: 66rem;
+  }
+
+  .tech-stack-column ul {
+    grid-template-columns: repeat(4, auto);
+  }
+}
+
 @media (max-width: $mobile-breakpoint) {
   main > section {
     padding-block: 4rem;
   }
 
-  // A tall viewport here runs out of page before Demo can reach the navbar,
-  // so the indicator skips from Tech Stack straight to Contact. Demo needs
-  // 143px of page below its landing point to be reachable; the three rules
-  // below add 256px between them, leaving it a 114px band. The landing is
-  // Demo's border box top, so its own padding — top and bottom alike — sits
-  // below that point and counts in full. Padding on the sections above Demo
-  // would not: it moves the landing down by as much as it adds.
+  // Gives Demo enough page below it to reach the navbar; 256px over 3 rules.
   #demo {
     padding-block: 6rem;
   }
@@ -612,20 +650,14 @@ body > footer {
   }
 
   .carousel {
-    grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+    grid-template-columns: $tap-target minmax(0, 1fr) $tap-target;
     gap: 0.5rem;
   }
 
   .carousel-button {
-    width: 2.75rem;
-    height: 2.75rem;
-    min-height: 2.75rem;
-  }
-}
-
-@media (max-width: $columns-breakpoint) {
-  .tech-stack-columns {
-    grid-template-columns: 1fr;
+    width: $tap-target;
+    height: $tap-target;
+    min-height: $tap-target;
   }
 }
 
