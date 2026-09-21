@@ -21,10 +21,10 @@ const initNav = () => {
 
   let updatePending = false;
 
-  // Remember a clicked link: short sections never scroll up to the navbar.
+  // Stores the clicked link, since short sections can't scroll up to the nav.
   let clickedNav = null;
 
-  // Don't start rewriting the URL until the user scrolls.
+  // Stays false until the first scroll, so page load doesn't change the URL.
   let trackingHash = false;
 
   // The navbar shrinks on scroll, so a click from the top would scroll too far.
@@ -67,7 +67,7 @@ const initNav = () => {
       document.documentElement.scrollHeight - PIXEL_SLACK;
     let currentItem = navItems[0];
 
-    // Release the click once the scroll lands and the page moves off it again.
+    // Hold the clicked link until the scroll lands, then drop it on the next move.
     if (clickedNav) {
       const atLanding =
         Math.abs(window.scrollY - clickedNav.landingScrollY) <= PIXEL_SLACK;
@@ -102,7 +102,7 @@ const initNav = () => {
       }
     });
 
-    // replaceState, not pushState: one entry per section would break Back.
+    // replaceState so scrolling doesn't add a history entry for every section.
     if (trackingHash && window.location.hash !== currentItem.link.hash) {
       window.history.replaceState(null, "", currentItem.link.hash);
     }
@@ -124,7 +124,7 @@ const initNav = () => {
     "(prefers-reduced-motion: reduce)"
   );
 
-  // An exact position, not scrollIntoView, so updateNavbar can detect arrival.
+  // Scroll to an exact position so updateNavbar can tell when it has arrived.
   navItems.forEach((item) => {
     const { link, target } = item;
 
@@ -203,7 +203,7 @@ const initCarousel = (carousel) => {
   const pad = (value) => String(value).padStart(2, "0");
 
   slides.forEach((slide, slideIndex) => {
-    const counter = slide.querySelector(".eyebrow");
+    const counter = slide.querySelector(".slide-counter");
 
     if (counter) {
       counter.textContent = `${pad(slideIndex + 1)} / ${pad(slides.length)}`;
@@ -234,6 +234,11 @@ const initCarousel = (carousel) => {
       return;
     }
 
+    // Arrow keys inside a modal shouldn't change the slide behind it.
+    if (event.target.closest("dialog")) {
+      return;
+    }
+
     event.preventDefault();
     showSlide(currentSlide + (event.key === "ArrowLeft" ? -1 : 1));
   });
@@ -258,7 +263,8 @@ const initModal = (trigger) => {
     trigger.focus();
   });
 
-  // A backdrop click reports the dialog as its target, so compare coordinates.
+  // Close on backdrop clicks. The browser counts these as clicks on the
+  // dialog, so check if the click falls outside it.
   dialog.addEventListener("click", (event) => {
     const box = dialog.getBoundingClientRect();
     const outside =

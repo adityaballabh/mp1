@@ -2,6 +2,9 @@ $content-width: 72rem;
 $mobile-breakpoint: 50rem;
 $wide-breakpoint: 72.5rem;
 
+$section-padding: 6rem;
+$section-padding-compact: 4rem;
+
 $nav-link-min-height: 2.25rem;
 $nav-padding-large: 0.875rem;
 $nav-padding-compact: 0.5rem;
@@ -10,7 +13,7 @@ $nav-font-size-compact: 0.85rem;
 
 $nav-border-width: 1px;
 
-$tap-target: 2.75rem;
+$control-height: 2.75rem;
 $icon-button-size: 3rem;
 
 // Includes the bottom border, so sections land exactly below the navbar.
@@ -18,10 +21,10 @@ $icon-button-size: 3rem;
   @return calc(#{2 * $padding + $nav-link-min-height} + #{$nav-border-width});
 }
 
-// ::backdrop doesn't always inherit from :root, so it gets the tokens too.
+// ::backdrop doesn't always inherit from :root, so it also gets the variables.
 :root,
 ::backdrop {
-  // Light ground
+  // Light sections
   --color-bg: #eef2f6;
   --color-surface: #ffffff;
   --color-surface-raised: #e1e8f1;
@@ -36,7 +39,7 @@ $icon-button-size: 3rem;
   --color-accent-border: #967435;
   --color-line: #cfd7e1;
 
-  // Ink bands
+  // Dark sections
   --color-ink: #161a1d;
   --color-on-ink: #f2efe8;
   --color-on-ink-soft: #cdd3da;
@@ -44,7 +47,7 @@ $icon-button-size: 3rem;
   --color-accent-on-ink: #d9a441;
   --color-accent-border-on-ink: #8a6a2e;
 
-  // Translucent and overlay
+  // Transparent colors
   --color-nav-bg: rgba(238, 242, 246, 0.92);
   --color-backdrop: rgba(22, 26, 29, 0.6);
   --color-scrim-top: rgba(22, 26, 29, 0.6);
@@ -70,7 +73,7 @@ $icon-button-size: 3rem;
 }
 
 @mixin section-shell {
-  padding: 6rem clamp(1rem, 5vw, 4rem);
+  padding: $section-padding clamp(1rem, 5vw, 4rem);
 
   > * {
     width: 100%;
@@ -126,7 +129,7 @@ $icon-button-size: 3rem;
   @include focus-ring;
 
   display: inline-flex;
-  min-height: $tap-target;
+  min-height: $control-height;
   padding: 0.5rem 1rem;
   align-items: center;
   justify-content: center;
@@ -155,11 +158,11 @@ $icon-button-size: 3rem;
   box-sizing: border-box;
 }
 
-// No scroll-behavior here: it would animate the jump to a #link on page load.
+// scroll-behavior is left out, since it would also animate a #link jump on load.
 html {
   overscroll-behavior-y: none;
 
-  // Anchoring would undo the nav-shrink correction main.js applies to landings.
+  // Scroll anchoring would undo the nav shrink correction in main.js.
   overflow-anchor: none;
 }
 
@@ -205,7 +208,7 @@ button {
   @include button-base;
 }
 
-.eyebrow,
+.slide-counter,
 .label {
   @include mono-label;
 
@@ -225,11 +228,6 @@ body > header {
   );
   text-align: center;
 
-  // The skip link focuses the header, but a ring around it would be noise.
-  &:focus {
-    outline: none;
-  }
-
   h1 {
     margin: 0;
     font-size: clamp(2.9rem, 7.2vw, 5.4rem);
@@ -245,33 +243,7 @@ body > header {
   }
 }
 
-// Above the navbar's z-index, so it isn't hidden behind the sticky bar.
-.skip-link {
-  @include mono-label(0.85rem);
-
-  position: fixed;
-  z-index: 20;
-  top: 0;
-  left: 50%;
-  display: inline-flex;
-  min-height: $tap-target;
-  padding: 0.5rem 1rem;
-  align-items: center;
-  border: 1px solid var(--color-accent-border);
-  border-radius: var(--radius-small);
-  background: var(--color-surface);
-  color: var(--color-accent);
-  text-decoration: none;
-  transform: translate(-50%, -150%);
-  transition: transform var(--duration-hover) var(--ease-out);
-
-  &:focus {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 3px;
-    transform: translate(-50%, 0.5rem);
-  }
-}
-
+// Sticky instead of fixed so the navbar takes up space above the header.
 body > nav {
   position: sticky;
   z-index: 10;
@@ -335,7 +307,7 @@ main > section,
 body > footer {
   @include section-shell;
 
-  // Always the compact height; main.js reads it back to correct for the shrink.
+  // The compact navbar height. main.js reads this to adjust for the shrink.
   scroll-margin-top: var(--nav-height-compact);
 }
 
@@ -350,7 +322,7 @@ body > footer {
   align-items: center;
 }
 
-// All slides stack in one grid cell, so the height doesn't jump on a switch.
+// Slides stack in one grid cell, so the height doesn't jump when they change.
 .carousel-track {
   display: grid;
 }
@@ -359,21 +331,21 @@ body > footer {
   @include card-surface;
 
   display: flex;
-  min-height: 21rem;
+  min-height: 18rem;
   padding: clamp(1.5rem, 4vw, 2.5rem);
   flex-direction: column;
   grid-area: 1 / 1;
   opacity: 0;
   visibility: hidden;
 
-  // Only the incoming slide fades, so the two never overlap.
+  // Only the incoming slide fades, so the old and new slides never overlap.
   &.is-active {
     opacity: 1;
     visibility: visible;
     transition: opacity var(--duration-slide) var(--ease-out);
   }
 
-  p:not(.eyebrow) {
+  p:not(.slide-counter) {
     max-width: 54rem;
     margin: 0 0 1.5rem;
   }
@@ -387,7 +359,6 @@ body > footer {
 .carousel-button {
   width: $icon-button-size;
   height: $icon-button-size;
-  min-height: $icon-button-size;
   padding: 0;
   border-radius: 50%;
   background: var(--color-surface);
@@ -525,7 +496,7 @@ dialog {
 }
 
 body > footer {
-  padding-block: 4rem;
+  padding-block: $section-padding-compact;
   background: var(--color-ink);
   color: var(--color-on-ink-soft);
   text-align: center;
@@ -629,16 +600,16 @@ body > footer {
 
 @media (max-width: $mobile-breakpoint) {
   main > section {
-    padding-block: 4rem;
+    padding-block: $section-padding-compact;
   }
 
-  // Gives Demo enough page below it to reach the navbar; 256px over 3 rules.
+  // Extra space here and in the footer lets Demo scroll up to the navbar.
   #demo {
-    padding-block: 6rem;
+    padding-block: $section-padding;
   }
 
   body > footer {
-    padding-block: 6rem;
+    padding-block: $section-padding;
 
     h2 {
       margin-bottom: 2.5rem;
@@ -650,14 +621,13 @@ body > footer {
   }
 
   .carousel {
-    grid-template-columns: $tap-target minmax(0, 1fr) $tap-target;
+    grid-template-columns: $control-height minmax(0, 1fr) $control-height;
     gap: 0.5rem;
   }
 
   .carousel-button {
-    width: $tap-target;
-    height: $tap-target;
-    min-height: $tap-target;
+    width: $control-height;
+    height: $control-height;
   }
 }
 
